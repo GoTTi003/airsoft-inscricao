@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Inscrição Airsoft</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #00c853;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 2rem;
+    }
+
+    button:hover {
+      background-color: #00b34c;
+    }
+
+    #mensagem {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="formularioInscricao">
+    <h2>Inscrição para o Jogo de Airsoft</h2>
+
+    <label for="nome">Nome do Participante:</label>
+    <input type="text" id="nome" name="nome" required>
+
+    <label for="campo">Campo de Jogo:</label>
+    <select id="campo" name="campo" required>
+      <option value="">-- Selecione --</option>
+      <option value="AABB">AABB</option>
+      <option value="Têxtil">Têxtil</option>
+    </select>
+
+    <label for="data">Data do Jogo:</label>
+    <input type="date" id="data" name="data" required>
+
+    <button type="submit">Enviar Inscrição</button>
+    <div id="mensagem"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('formularioInscricao');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const nome = form.nome.value.trim();
+      const campo = form.campo.value;
+      const data = form.data.value;
+
+      if (!nome || !campo || !data) {
+        mensagem.textContent = "Por favor, preencha todos os campos.";
+        mensagem.style.color = "red";
+        return;
+      }
+
+      const url = "https://script.google.com/macros/s/AKfycbz5cQJ0mcNayVjCM5EKVUuZsfWrY-BUqf0i2cg2cNwwC_cV-VpPRrBUbPDDoxZy02sjDg/exec";
+      const formData = new FormData();
+      formData.append('nome', nome);
+      formData.append('campo', campo);
+      formData.append('data', data);
+
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        mensagem.textContent = data;
+        mensagem.style.color = "lime";
+        form.reset();
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        mensagem.textContent = "Erro ao enviar inscrição.";
+        mensagem.style.color = "red";
+      });
+    });
+  </script>
+
+</body>
+</html>
